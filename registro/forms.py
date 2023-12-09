@@ -1,7 +1,8 @@
 # myapp/forms.py
 from django import forms
+from .models import Profile
 
-class RegistrationForm(forms.Form):
-    nombre = forms.CharField(max_length=100)
-    apellido = forms.CharField(max_length=100)
-    image_data = forms.ImageField()
+class RegistrationForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['nombre', 'apellido', 'imagen']

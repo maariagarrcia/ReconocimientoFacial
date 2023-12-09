@@ -1,16 +1,13 @@
 import os
-import base64
 from django.conf import settings
 from django.shortcuts import render
-from PIL import Image
-from io import BytesIO
 from .models import Profile
 
 def registrar_nuevo_vecino(request):
     if request.method == 'POST':
         name = request.POST.get('nombre')
         lastname = request.POST.get('apellido')
-        image_data = request.FILES.get('image_data')
+        image_data = request.POST.get('image_data')
 
         if image_data:
             # Guardar la imagen en el modelo Profile
@@ -24,22 +21,17 @@ def registrar_nuevo_vecino(request):
             image_name = f"{name}_{lastname}.jpg"
             image_path = os.path.join(media_path, image_name)
 
-            # Guardar la imagen en disco después de decodificarla
+            # Guardar la imagen en disco sin decodificar
             try:
-                # Decodificar la imagen base64
-                decoded_image = base64.b64decode(image_data.read())
-
-                # Abrir la imagen utilizando PIL
-                with Image.open(BytesIO(decoded_image)) as img:
-                    # Guardar la imagen
-                    img.save(image_path, format='JPEG')
-
-                persona.imagen = f'profiles/{image_name}'
-                persona.save()
-
-                print(f"¡Registro exitoso! Imagen guardada en: {image_path}")
+                with open(image_path, 'wb') as img_file:
+                    img_file.write(image_data)
             except Exception as e:
                 print(f"Error saving image: {e}")
+
+            persona.imagen = f'profiles/{image_name}'
+            persona.save()
+
+            print(f"¡Registro exitoso! Imagen guardada en: {image_path}")
         else:
             print("Error: 'image_data' is missing in the POST request")
 
