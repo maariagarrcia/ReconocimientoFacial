@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Registro de Nuevo Vecino</h2>
+  <form method="post" action="{% url 'registro' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    Nombre: <input type="text" name="nombre"><br>
+    Apellido: <input type="text" name="apellido"><br>
+    
+    <!-- Agrega el elemento de video para la cámara -->
+    <video id="video" width="640" height="480" autoplay></video>
+    
+    <button type="button" id="capture-btn">Capturar Foto</button>
+    <canvas id="canvas" width="640" height="480"></canvas>
+    
+    <!-- Agrega un input de tipo 'file' para seleccionar imágenes desde el dispositivo -->
+    <input type="file" name="image_data_file" accept="image/*" style="display: none;">
+
+    <!-- Agrega un campo oculto para almacenar la imagen codificada en base64 -->
+    <input type="hidden" id="image_data" name="image_data" value="">
+    
+    <input type="submit" value="Registrar">
+  </form>
+
+  <script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const captureButton = document.getElementById('capture-btn');
+    const imageDataInput = document.getElementById('image_data');
+    const fileInput = document.querySelector('input[name="image_data_file"]');
+
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then((stream) => {
+        video.srcObject = stream;
+      })
+      .catch((error) => {
+        console.error('Error accessing camera:', error);
+      });
+
+    captureButton.addEventListener('click', () => {
+      const context = canvas.getContext('2d');
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      // Convertir la imagen a formato base64 y asignarla al campo de formulario
+      const imageData = canvas.toDataURL('image/jpeg');
+      imageDataInput.value = imageData;
+
+      // Detener la transmisión de la cámara
+      video.srcObject.getTracks().forEach(track => track.stop());
+    });
+
+    // Agregar un event listener para el cambio en el input de tipo 'file'
+    fileInput.addEventListener('change', () => {
+      const file = fileInput.files[0];
+
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          // Mostrar la imagen seleccionada en el canvas
+          const img = new Image();
+          img.src = event.target.result;
+          img.onload = () => {
+            const context = canvas.getContext('2d');
+            context.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+            // Convertir la imagen a formato base64 y asignarla al campo de formulario
+            const imageData = canvas.toDataURL('image/jpeg');
+            imageDataInput.value = imageData;
+          };
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  </script>
+  
+{% endblock %}
