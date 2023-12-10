@@ -20,9 +20,11 @@ from app import views as app_views # import views.py from app folder
 from django.conf import settings
 from django.conf.urls.static import static
 from registro import views as registro_views
+from login.views import login_view
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("",app_views.index,name="index"),
     path("registro/",registro_views.registro,name="registro"),
+    path("login/",login_view,name="login"),
 ]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
