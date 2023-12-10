@@ -32,13 +32,12 @@ class ReconocimientoFacial:
 
     def codrostros(self, images):
         listacod = []
-        for img_path in images:
+        for img in images:
             try:
-                img = cv2.imread(img_path)
                 if img is None or img.size == 0:
-                    print(f"Error al cargar la imagen: {img_path}")
-                    continue  # Salta la imagen si no se ha cargado correctamente
-    
+                    print("Error: La imagen está vacía o no se ha cargado correctamente.")
+                    continue
+
                 img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
                 cod = fr.face_encodings(img)[0]
                 listacod.append(cod)

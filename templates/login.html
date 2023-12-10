@@ -1,80 +1,15 @@
-{% extends 'base.html' %}
+<!-- en reconocimiento.html dentro de templates/tu_aplicacion/ -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reconocimiento Facial</title>
+</head>
+<body>
+    <h1>{{ mensaje }}</h1>
+    <!-- Puedes agregar más contenido según tus necesidades -->
+    <div id="video-container"></div>
+</body>
 
-{% block content %}
-  <h2>Iniciar Sesión</h2>
-  <form method="post" action="{% url 'login' %}" enctype="multipart/form-data">
-    {% csrf_token %}
-    Usuario: <input type="text" name="usuario"><br>
-    Contraseña: <input type="password" name="contrasena"><br>
-
-    <!-- Agrega el elemento de video para la cámara -->
-    <video id="video" width="640" height="480" autoplay></video>
-
-    <button type="button" id="capture-btn">Capturar Foto</button>
-    <canvas id="canvas" width="640" height="480" style="display: none;"></canvas>
-
-    <!-- Agrega un input de tipo 'file' para seleccionar imágenes desde el dispositivo -->
-    <input type="file" name="imagen" accept="image/*" style="display: none;">
-
-    <!-- Agrega un campo oculto para almacenar la imagen codificada en base64 -->
-    <input type="hidden" id="image_data" name="image_data" value="">
-
-    <input type="submit" value="Iniciar Sesión">
-  </form>
-
-  <script>
-    const video = document.getElementById('video');
-    const canvas = document.getElementById('canvas');
-    const captureButton = document.getElementById('capture-btn');
-    const imageDataInput = document.getElementById('image_data');
-    const fileInput = document.querySelector('input[name="imagen"]');
-
-    // Abre la cámara y muestra el video en el elemento de video
-    navigator.mediaDevices.getUserMedia({ video: true })
-      .then((stream) => {
-        video.srcObject = stream;
-      })
-      .catch((error) => {
-        console.error('Error accessing camera:', error);
-      });
-
-    captureButton.addEventListener('click', () => {
-      const context = canvas.getContext('2d');
-      context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-      // Convertir la imagen a formato base64 y asignarla al campo de formulario
-      const imageData = canvas.toDataURL('image/jpeg');
-      imageDataInput.value = imageData;
-
-      // Detener la transmisión de la cámara
-      video.srcObject.getTracks().forEach(track => track.stop());
-
-      // Mostrar el elemento canvas y ocultar el video
-      canvas.style.display = 'block';
-      video.style.display = 'none';
-    });
-
-    // Agregar un event listener para el cambio en el input de tipo 'file'
-    fileInput.addEventListener('change', () => {
-      const file = fileInput.files[0];
-
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          // Mostrar la imagen seleccionada en el canvas
-          const img = new Image();
-          img.src = event.target.result;
-          img.onload = () => {
-            const context = canvas.getContext('2d');
-            context.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-            // Convertir la imagen a formato base64 y asignarla al campo de formulario
-            const imageData = canvas.toDataURL('image/jpeg');
-            imageDataInput.value = imageData;
-          };
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-  </script>
-{% endblock %}
+</html>
