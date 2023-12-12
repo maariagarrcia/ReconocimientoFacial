@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     "app",
     "registro",
     "login",
+    "channels",
+
 ]
 
 MIDDLEWARE = [
@@ -72,7 +74,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "FaceRecognition.wsgi.application"
+ASGI_APPLICATION = 'FaceRecognition.asgi.application'
 
 
 # Database
@@ -134,3 +136,5 @@ MEDIA_URL = "/media/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+AUTH_USER_MODEL = 'login.CustomUser'
