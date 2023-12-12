@@ -114,7 +114,6 @@ class ReconocimientoFacial:
         hands.close()
 
 
-
 class Gestos:
     def __init__(self, ventana, nombre_usuario):
         self.ventana_gestos = ventana
