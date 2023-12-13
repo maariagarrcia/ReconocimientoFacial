@@ -6,6 +6,11 @@ import base64
 import face_recognition
 # Importa la biblioteca os para manejar rutas de archivos
 import os
+from .reconocimiento_facial import pipeline_model
+from django.http.response import StreamingHttpResponse
+from .grupo import ReconocimientoFacial
+
+
 
 def facial_login(request):
     if request.method == 'POST':
@@ -56,3 +61,27 @@ def facial_login(request):
         form = FacialAuthenticationForm()
 
     return render(request, 'facial_login.html', {'form': form})
+
+
+
+def video_feed(request):
+    return StreamingHttpResponse(pipeline_model(), content_type='multipart/x-mixed-replace; boundary=frame')
+
+def login(request):
+    return render(request, 'login.html')
+
+def grupo(request):
+    reconocimiento = ReconocimientoFacial()  
+
+    return StreamingHttpResponse(reconocimiento.iniciar_reconocimiento(), content_type='multipart/x-mixed-replace; boundary=frame')
+
+def index(request):
+    return render(request, 'grupo.html')
+
+from django.shortcuts import render
+from .grupo import ReconocimientoFacial
+
+def reconocimiento_view(request):
+    reconocimiento = ReconocimientoFacial()
+    recognized_names = reconocimiento.iniciar_reconocimiento()
+    return render(request, 'grupo.html', {'recognized_names': recognized_names})

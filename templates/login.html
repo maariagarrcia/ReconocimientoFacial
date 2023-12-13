@@ -9,5 +9,16 @@
 </head>
 <body>
     <img src="{% url 'video_feed' %}" alt="Video Feed">
+
+    <img src="/media/ml_output/process.jpg" alt="Video Feed">
+
+
+
+    <!-- Muestra los resultados en la página -->
+    <div>
+        <h2>Resultados del Reconocimiento Facial</h2>
+        <p>Nombre: {{ face_name }}</p>
+        <p>Puntuación: {{ face_name_score }}</p>
+    </div>
 </body>
 </html>

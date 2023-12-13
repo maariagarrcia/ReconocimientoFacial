@@ -9,19 +9,19 @@ STATIC_DIR = settings.STATIC_DIR
 
 # face detection
 face_detector_model = cv2.dnn.readNetFromCaffe(os.path.join(
-    STATIC_DIR, "./models/deploy.prototxt.txt"), os.path.join(STATIC_DIR, "./models/res10_300x300_ssd_iter_140000.caffemodel"))
+    STATIC_DIR, "./models1/deploy.prototxt.txt"), os.path.join(STATIC_DIR, "./models1/res10_300x300_ssd_iter_140000.caffemodel"))
 
 # feature extraction
 face_feature_model = cv2.dnn.readNetFromTorch(
-    os.path.join(STATIC_DIR, "./models/openface.nn4.small2.v1.t7"))
+    os.path.join(STATIC_DIR, "./models1/openface.nn4.small2.v1.t7"))
 
 # face recognition
 face_recognition_model = pickle.load(open(os.path.join(
-    STATIC_DIR, "./models/machinelearning_face_person_identity.pkl"), mode="rb"))
+    STATIC_DIR, "./models1/machinelearning_face_person_identity.pkl"), mode="rb"))
 
 # emotion recognition model
 emotion_recognition_model = pickle.load(open(os.path.join(
-    STATIC_DIR, "./models/machinelearning_face_emotion.pkl"), mode="rb"))
+    STATIC_DIR, "./models1/machinelearning_face_emotion.pkl"), mode="rb"))
 
 
 def pipeline_model(path):
