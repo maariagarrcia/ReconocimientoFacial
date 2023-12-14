@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="/static/handtrack.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #mensajeContainer {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        canvas {
+            position: absolute;
+        }
+    </style>
+    <title>Reconocimiento de Gestos</title>
+</head>
+<body>
+    <video id="video" width="720" height="560" autoplay muted></video>
+
+    <div id="mensajeContainer"></div>
+
+    <script>
+        const video = document.getElementById('video');
+        const mensajeContainer = document.getElementById('mensajeContainer');
+
+        async function startVideo() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
+                video.srcObject = stream;
+
+                // Inicializar el modelo de Handtrack.js
+                const model = await handTrack.load();
+                handTrack.startVideo(video).then(status => {
+                    if (status) {
+                        runDetection();
+                    }
+                });
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function runDetection() {
+            // Detectar gestos continuamente
+            handTrack.detect(video).then(predictions => {
+                if (predictions.length > 0) {
+                    // Si se detecta un gesto, puedes realizar alguna acción
+                    console.log('Gesto detectado:', predictions[0].gesture);
+                    mostrarMensaje('Gesto detectado: ' + predictions[0].gesture);
+                }
+
+                // Continuar ejecutando la detección
+                requestAnimationFrame(runDetection);
+            });
+        }
+
+        function mostrarMensaje(mensaje) {
+            mensajeContainer.innerText = 'Mensaje: ' + mensaje;
+        }
+
+        // Iniciar el video y la detección al cargar la página
+        startVideo();
+    </script>
+</body>
+</html>

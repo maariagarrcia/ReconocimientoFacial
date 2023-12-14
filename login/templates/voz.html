@@ -4,39 +4,83 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reconocimiento de Voz</title>
+    <style>
+        #mensajeContainer {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
 </head>
 <body>
     <h1>Reconocimiento de Voz</h1>
 
     <button onclick="iniciarReconocimiento()">Hablar</button>
+    <div id="mensajeContainer"></div>
 
     <script>
         function iniciarReconocimiento() {
-            // Verifica si el navegador admite la Web Speech API
             if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
-                // Crear un objeto de reconocimiento de voz
                 var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-
-                // Configuración del reconocimiento
-                recognition.lang = 'es-ES'; // Establece el idioma a español
-
-                // Evento que se dispara cuando se detecta una palabra hablada
+                recognition.lang = 'es-ES';
                 recognition.onresult = function(event) {
                     var transcript = event.results[0][0].transcript;
-                    alert('Texto reconocido: ' + transcript);
-
-                    // Puedes enviar el texto reconocido al servidor aquí
-
-                    // Luego, puedes descomentar la siguiente línea para simular el envío del formulario
-                    // document.getElementById('reconocimientoForm').submit();
+                    if (transcript.toLowerCase().includes('a qué piso quieres ir')) {
+                        hacerPregunta('¿A qué piso quieres ir?');
+                    } else if (transcript.toLowerCase().includes('al piso')) {
+                        var numeroPiso = obtenerNumeroPiso(transcript);
+                        if (numeroPiso !== null && numeroPiso >= 1 && numeroPiso <= 9) {
+                            var mensaje = 'Yendo al piso ' + numeroPiso;
+                            mostrarMensaje(mensaje);
+                            setTimeout(function () {
+                                reproducirVoz(mensaje);
+                            }, 1000);  // Aumenta o disminuye este valor según sea necesario
+                        } else {
+                            var mensajeError = 'Número de piso no válido';
+                            mostrarMensaje(mensajeError);
+                            setTimeout(function () {
+                                reproducirVoz(mensajeError);
+                            }, 1000);  // Aumenta o disminuye este valor según sea necesario
+                        }
+                    }
                 };
-
-                // Comienza el reconocimiento de voz
                 recognition.start();
             } else {
                 alert('El reconocimiento de voz no es compatible con este navegador.');
             }
         }
+
+        function hacerPregunta(pregunta) {
+            var mensajeContainer = document.getElementById('mensajeContainer');
+            mensajeContainer.innerText = pregunta;
+            setTimeout(function () {
+                reproducirVoz(pregunta);
+            }, 1000);  // Aumenta o disminuye este valor según sea necesario
+        }
+
+        function mostrarMensaje(mensaje) {
+            var mensajeContainer = document.getElementById('mensajeContainer');
+            mensajeContainer.innerText = 'Texto reconocido: ' + mensaje;
+        }
+
+        function reproducirVoz(texto) {
+            var mensajeVoz = new SpeechSynthesisUtterance(texto);
+            window.speechSynthesis.speak(mensajeVoz);
+        }
+
+        function obtenerNumeroPiso(texto) {
+            var palabras = texto.split(' ');
+            for (var i = 0; i < palabras.length; i++) {
+                if (!isNaN(palabras[i])) {
+                    return parseInt(palabras[i]);
+                }
+            }
+            return null;
+        }
+
+        // Hacer la pregunta automáticamente después de cargar la página
+        window.onload = function () {
+            hacerPregunta('¿A qué piso quieres ir?');
+        };
     </script>
 </body>
 </html>

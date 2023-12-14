@@ -62,8 +62,6 @@ def facial_login(request):
     return render(request, 'facial_login.html', {'form': form})
 
 
-
-
 def grupo(request):
     reconocimiento = ReconocimientoFacial()  
 
