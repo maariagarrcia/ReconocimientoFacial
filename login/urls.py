@@ -11,7 +11,5 @@ urlpatterns = [
     path('r/', reconocimiento_view, name='reconocimiento_view'),
 
 
-    
-
 ]
 

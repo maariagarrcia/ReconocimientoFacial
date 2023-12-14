@@ -1,153 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hand Gesture Recognition</title>
-    <style>
-        #videoElement {
-            width: 600px;
-            height: 400px;
-            background-color: black;
-            display: none;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detección de manos</title>
+  <!-- Ajusta la ruta según la ubicación de handtrack.min.js en tu proyecto -->
+  <script src="/static/handtrack.min.js"></script>
 </head>
 <body>
-    <video autoplay='true' id='videoElement'></video>
-    <canvas id='canvas' width='600px' height='400px'></canvas>
+  <video id="myVideo" width="640" height="480" autoplay></video>
+  <script>
+    // Inicializar la cámara
+    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+    
+    navigator.getUserMedia({ video: {} }, (stream) => {
+      let video = document.getElementById('myVideo');
+      video.srcObject = stream;
 
-    <script src="https://unpkg.com/@tensorflow/tfjs-core@2.1.0/dist/tf-core.js"></script>
-    <script src="https://unpkg.com/@tensorflow/tfjs-converter@2.1.0/dist/tf-converter.js"></script>
-    <script src="https://unpkg.com/@tensorflow/tfjs-backend-webgl@2.1.0/dist/tf-backend-webgl.js"></script>
-    <script src="https://unpkg.com/@tensorflow-models/handpose@0.0.6/dist/handpose.js"></script>
+      // Inicializar Handtrack.js
+      const modelParams = {
+        flipHorizontal: false,
+        maxNumBoxes: 1,
+        iouThreshold: 0.1,
+        scoreThreshold: 0.6,
+      };
 
-    <script>
-        let fingerLookupIndices = {
-            thumb: [0, 1, 2, 3, 4],
-            indexFinger: [0, 5, 6, 7, 8],
-            middleFinger: [0, 9, 10, 11, 12],
-            ringFinger: [0, 13, 14, 15, 16],
-            pinky: [0, 17, 18, 19, 20]
-        };
-
-        function drawPoint(y, x, r) {
-            ctx.beginPath();
-            ctx.arc(x, y, r, 0, 2 * Math.PI);
-            ctx.fill();
-        }
-
-        function drawKeypoints(keypoints) {
-            const keypointsArray = keypoints;
-
-            for (let i = 0; i < keypointsArray.length; i++) {
-                const y = keypointsArray[i][0];
-                const x = keypointsArray[i][1];
-                drawPoint(x - 2, y - 2, 3);
+      handTrack.load(modelParams).then(model => {
+        // Iniciar la detección en bucle
+        setInterval(() => {
+          model.detect(video).then(predictions => {
+            if (predictions && predictions.length > 0) {
+              // Muestra las coordenadas de todas las manos detectadas
+              console.log(predictions.map(prediction => prediction.bbox));
             }
-
-            const fingers = Object.keys(fingerLookupIndices);
-            for (let i = 0; i < fingers.length; i++) {
-                const finger = fingers[i];
-                const points = fingerLookupIndices[finger].map(idx => keypoints[idx]);
-                drawPath(points, false);
-            }
-        }
-
-        function drawPath(points, closePath) {
-            const region = new Path2D();
-            region.moveTo(points[0][0], points[0][1]);
-            for (let i = 1; i < points.length; i++) {
-                const point = points[i];
-                region.lineTo(point[0], point[1]);
-            }
-
-            if (closePath) {
-                region.closePath();
-            }
-            ctx.stroke(region);
-        }
-
-        function countFingers(keypoints) {
-            const thumbTip = keypoints[4][1];
-            const indexTip = keypoints[8][0];
-            const middleTip = keypoints[12][0];
-            const ringTip = keypoints[16][0];
-            const pinkyTip = keypoints[20][0];
-            const fingerHeightThreshold = 100;
-
-            let fingerCount = 0;
-
-            if (thumbTip < fingerHeightThreshold) {
-                fingerCount += 1;
-            }
-
-            if (indexTip < fingerHeightThreshold) {
-                fingerCount += 1;
-            }
-
-            if (middleTip < fingerHeightThreshold) {
-                fingerCount += 1;
-            }
-
-            if (ringTip < fingerHeightThreshold) {
-                fingerCount += 1;
-            }
-
-            if (pinkyTip < fingerHeightThreshold) {
-                fingerCount += 1;
-            }
-
-            return fingerCount;
-        }
-
-        let video = document.getElementById('videoElement');
-        let canvas = document.getElementById('canvas');
-        let ctx = canvas.getContext('2d');
-        let model;
-
-        const setUpCamera = () => {
-            if (navigator.mediaDevices.getUserMedia) {
-                navigator.mediaDevices.getUserMedia({ video: true })
-                    .then(function (stream) {
-                        video.srcObject = stream;
-                    })
-                    .catch(function (err) {
-                        console.log(err);
-                    });
-            }
-        }
-
-        const detectHandPoses = async () => {
-            try {
-                const prediction = await model.estimateHands(video);
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.drawImage(video, 0, 0, 600, 400);
-                ctx.beginPath();
-                ctx.strokeStyle = 'blue';
-                ctx.lineWidth = '4';
-                prediction.forEach((pred) => {
-                    const result = pred.landmarks;
-                    const annotations = pred.annotations;
-                    drawKeypoints(result, annotations);
-
-                    const fingerCount = countFingers(result);
-                    console.log('Dedos visibles:', fingerCount);
-                });
-            } catch (error) {
-                console.error(error);
-            }
-        }
-
-        setUpCamera();
-        video.addEventListener("loadeddata", async () => {
-            try {
-                model = await handpose.load();
-                setInterval(detectHandPoses, 100);
-            } catch (error) {
-                console.error(error);
-            }
-        });
-    </script>
+          });
+        }, 1000); // Ajusta la frecuencia de detección según sea necesario
+      });
+    }, (err) => console.error(err));
+  </script>
 </body>
 </html>

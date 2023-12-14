@@ -6,7 +6,6 @@ import base64
 import face_recognition
 # Importa la biblioteca os para manejar rutas de archivos
 import os
-from .reconocimiento_facial import pipeline_model
 from django.http.response import StreamingHttpResponse
 from .grupo import ReconocimientoFacial
 
@@ -64,11 +63,6 @@ def facial_login(request):
 
 
 
-def video_feed(request):
-    return StreamingHttpResponse(pipeline_model(), content_type='multipart/x-mixed-replace; boundary=frame')
-
-def login(request):
-    return render(request, 'login.html')
 
 def grupo(request):
     reconocimiento = ReconocimientoFacial()  
