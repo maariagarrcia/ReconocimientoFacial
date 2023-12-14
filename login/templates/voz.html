@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reconocimiento de Voz</title>
+</head>
+<body>
+    <h1>Reconocimiento de Voz</h1>
+
+    <button onclick="iniciarReconocimiento()">Hablar</button>
+
+    <script>
+        function iniciarReconocimiento() {
+            // Verifica si el navegador admite la Web Speech API
+            if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+                // Crear un objeto de reconocimiento de voz
+                var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+
+                // Configuración del reconocimiento
+                recognition.lang = 'es-ES'; // Establece el idioma a español
+
+                // Evento que se dispara cuando se detecta una palabra hablada
+                recognition.onresult = function(event) {
+                    var transcript = event.results[0][0].transcript;
+                    alert('Texto reconocido: ' + transcript);
+
+                    // Puedes enviar el texto reconocido al servidor aquí
+
+                    // Luego, puedes descomentar la siguiente línea para simular el envío del formulario
+                    // document.getElementById('reconocimientoForm').submit();
+                };
+
+                // Comienza el reconocimiento de voz
+                recognition.start();
+            } else {
+                alert('El reconocimiento de voz no es compatible con este navegador.');
+            }
+        }
+    </script>
+</body>
+</html>
