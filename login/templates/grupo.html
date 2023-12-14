@@ -14,14 +14,23 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            position: relative;
+            z-index: 99;
         }
         canvas {
             position: absolute;
+        }
+        #particles-js {
+            height: 100vh;
+            width: 100%;
+            position: fixed;
+            z-index: -1;
         }
     </style>
     <title>Face Recognition</title>
 </head>
 <body>
+    <div id="particles-js"></div>
     <video id='video' width="720" height="560" autoplay muted></video>
 
     <script>
@@ -103,6 +112,8 @@
         }, 100);
         });        
     </script>
+    <script src="/static/particles.min.js"></script>
+    <script>src="/static/app.js"</script>
     
 </body>
 </html>
