@@ -5,6 +5,131 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="/static/face-api.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Pacifico&text=Pure">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:700&text=css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Kaushan+Script&text=!">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    
+
+    
+   
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          particlesJS('particles-js', {
+            "particles": {
+              "number": {
+                "value": 180,
+                "density": {
+                  "enable": true,
+                  "value_area": 1000
+                }
+              },
+              "color": {
+                "value": "#ffffff"
+              },
+              "shape": {
+                "type": "circle",
+                "stroke": {
+                  "width": 0,
+                  "color": "#000000"
+                },
+                "polygon": {
+                  "nb_sides": 5
+                },
+                "image": {
+                  "src": "img/github.svg",
+                  "width": 100,
+                  "height": 100
+                }
+              },
+              "opacity": {
+                "value": 0.5,
+                "random": false,
+                "anim": {
+                  "enable": false,
+                  "speed": 1,
+                  "opacity_min": 0.1,
+                  "sync": false
+                }
+              },
+              "size": {
+                "value": 5,
+                "random": true,
+                "anim": {
+                  "enable": false,
+                  "speed": 40,
+                  "size_min": 0.1,
+                  "sync": false
+                }
+              },
+              "line_linked": {
+                "enable": true,
+                "distance": 150,
+                "color": "#ffffff",
+                "opacity": 0.4,
+                "width": 1
+              },
+              "move": {
+                "enable": true,
+                "speed": 6,
+                "direction": "none",
+                "random": false,
+                "straight": false,
+                "out_mode": "out",
+                "bounce": false,
+                "attract": {
+                  "enable": false,
+                  "rotateX": 600,
+                  "rotateY": 1200
+                }
+              }
+            },
+            "interactivity": {
+              "detect_on": "canvas",
+              "events": {
+                "onhover": {
+                  "enable": true,
+                  "mode": "repulse"
+                },
+                "onclick": {
+                  "enable": true,
+                  "mode": "push"
+                },
+                "resize": true
+              },
+              "modes": {
+                "grab": {
+                  "distance": 400,
+                  "line_linked": {
+                    "opacity": 1
+                  }
+                },
+                "bubble": {
+                  "distance": 400,
+                  "size": 40,
+                  "duration": 2,
+                  "opacity": 8,
+                  "speed": 3
+                },
+                "repulse": {
+                  "distance": 200,
+                  "duration": 0.4
+                },
+                "push": {
+                  "particles_nb": 4
+                },
+                "remove": {
+                  "particles_nb": 2
+                }
+              }
+            },
+            "retina_detect": true
+          });
+        });
+      </script>
+      
+      
     <style>
         body {
             margin: 0;
@@ -15,29 +140,411 @@
             justify-content: center;
             align-items: center;
             position: relative;
-            z-index: 99;
+            overflow: hidden;
+            
+            border-radius: 20px;
         }
+
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background-color: #000000; /* Fondo negro para las partículas */
+        }
+
+        video {
+          position: absolute;
+          z-index: 1;
+          width: 50%; /* Ajusta el tamaño de la cámara según tus necesidades */
+          height: auto;
+          max-width: 80vw; /* Establece un tamaño máximo para el ancho */
+          max-height: 80vh; /* Establece un tamaño máximo para la altura */
+          object-fit: cover; /* Para asegurar que el video cubra todo el contenedor */
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          border-radius: 20px; /* Agrega bordes redondos al video */
+      }
+
         canvas {
             position: absolute;
+            z-index: 2;
+            width: 50%; /* Ajusta el tamaño del canvas según tus necesidades */
+            height: auto;
+            max-width: 80vw; /* Establece un tamaño máximo para el ancho */
+            max-height: 80vh; /* Establece un tamaño máximo para la altura */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
-        #particles-js {
-            height: 100vh;
-            width: 100%;
-            position: fixed;
-            z-index: -1;
-        }
-    </style>
-    <title>Face Recognition</title>
+        #title-container {
+          position: fixed;
+          top: 20px;
+          left: 20px;
+          z-index: 3;
+          color: whitesmoke;
+          font-size: 0.8em; /* Tamaño de la fuente más pequeño */
+          font-family: 'Pacifico', 'Kaushan Script', cursive;
+          font-weight: bold;
+          letter-spacing: -1px;
+          text-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+      }
+      #botonHablar {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    #botonHablar:hover {
+        background-color: #45a049;
+    }
+      
+      .stage {
+          height: 150px; /* Altura más pequeña */
+          width: 250px; /* Ancho más pequeño */
+          position: fixed;
+          top: 20px;
+          left: 20px;
+          perspective: 9999px;
+          transform-style: preserve-3d;
+          z-index: 1;
+      }
+      
+      .layer {
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          transform-style: preserve-3d;
+          animation: ಠ_ಠ 5s infinite alternate ease-in-out -7.5s;
+          animation-fill-mode: forwards;
+          transform: rotateY(40deg) rotateX(33deg) translateZ(0);
+      }
+      
+      .layer:after {
+          font: 75px/0.65 "Pacifico", "Kaushan Script", Futura, "Roboto", "Trebuchet MS", Helvetica, sans-serif; /* Tamaño de fuente más pequeño */
+          content: "Smart\a    Elevator!";
+          white-space: pre;
+          text-align: center;
+          height: 100%;
+          width: 100%;
+          position: absolute;
+          top: 25px;
+          color: whitesmoke;
+          letter-spacing: -1px;
+          
+          text-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .layer:nth-child(1):after {
+          transform: translateZ(0px);
+      }
+
+      .layer:nth-child(2):after {
+          transform: translateZ(-1.5px);
+      }
+
+      .layer:nth-child(3):after {
+          transform: translateZ(-3px);
+      }
+
+      .layer:nth-child(4):after {
+          transform: translateZ(-4.5px);
+      }
+
+      .layer:nth-child(5):after {
+          transform: translateZ(-6px);
+      }
+
+      .layer:nth-child(6):after {
+          transform: translateZ(-7.5px);
+      }
+
+      .layer:nth-child(7):after {
+          transform: translateZ(-9px);
+      }
+
+      .layer:nth-child(8):after {
+          transform: translateZ(-10.5px);
+      }
+
+      .layer:nth-child(9):after {
+          transform: translateZ(-12px);
+      }
+
+      .layer:nth-child(10):after {
+          transform: translateZ(-13.5px);
+      }
+
+      .layer:nth-child(11):after {
+          transform: translateZ(-15px);
+      }
+
+      .layer:nth-child(12):after {
+          transform: translateZ(-16.5px);
+      }
+
+      .layer:nth-child(13):after {
+          transform: translateZ(-18px);
+      }
+
+      .layer:nth-child(14):after {
+          transform: translateZ(-19.5px);
+      }
+
+      .layer:nth-child(15):after {
+          transform: translateZ(-21px);
+      }
+
+      .layer:nth-child(16):after {
+          transform: translateZ(-22.5px);
+      }
+
+      .layer:nth-child(17):after {
+          transform: translateZ(-24px);
+      }
+
+      .layer:nth-child(18):after {
+          transform: translateZ(-25.5px);
+      }
+
+      .layer:nth-child(19):after {
+          transform: translateZ(-27px);
+      }
+
+      .layer:nth-child(20):after {
+          transform: translateZ(-28.5px);
+      }
+
+      .layer:nth-child(n+10):after {
+          -webkit-text-stroke: 3px rgba(0, 0, 0, 0.25);
+      }
+
+      .layer:nth-child(n+11):after {
+          -webkit-text-stroke: 15px black;
+          text-shadow: 6px 0 6px #808080, 5px 5px 5px #002951, 0 6px 6px #808080;
+      }
+
+      .layer:nth-child(n+12):after {
+          -webkit-text-stroke: 15px #808080;
+      }
+
+      .layer:last-child:after {
+          -webkit-text-stroke: 17px rgba(0, 0, 0, 0.1);
+      }
+
+      .layer:first-child:after {
+          color: white;
+          text-shadow: none;
+
+      }
+      .circular-menu {
+        position: fixed;
+        bottom: 1em;
+        left: 1em; /* Ajustado desde 'right: 1em;' */
+      
+        z-index: 10; /* Ensure the menu appears above other elements */
+      }
+      
+      .circular-menu .floating-btn {
+        display: block;
+        width: 3.5em;
+        height: 3.5em;
+        border-radius: 50%;
+        background-color: grey;
+        box-shadow: 0 2px 5px 0 hsla(0, 0%, 0%, .26);  
+        color: hsl(0, 0%, 100%);
+        text-align: center;
+        line-height: 3.9;
+        cursor: pointer;
+        outline: 0;
+      }
+      
+      .circular-menu.active .floating-btn {
+        box-shadow: inset 0 0 3px hsla(0, 0%, 0%, .3);
+      }
+      
+      .circular-menu .floating-btn:active {
+        box-shadow: 0 4px 8px 0 hsla(0, 0%, 0%, .4);
+      }
+      
+      .circular-menu .floating-btn i {
+        font-size: 1.3em;
+        transition: transform .2s;  
+      }
+      
+      .circular-menu.active .floating-btn i {
+        transform: rotate(-45deg);
+      }
+      
+      .circular-menu:after {
+        display: block;
+        content: ' ';
+        width: 3.5em;
+        height: 3.5em;
+        border-radius: 50%;
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: -2;
+        background-color: grey;
+        transition: all .3s ease;
+      }
+      
+      .circular-menu.active:after {
+        transform: scale3d(5.5, 5.5, 1);
+        transition-timing-function: cubic-bezier(.68, 1.55, .265, 1);
+      }
+      
+      .circular-menu .items-wrapper {
+        padding: 0;
+        margin: 0;
+      }
+      
+      .circular-menu .menu-item {
+        position: absolute;
+        top: .2em;
+        right: .2em;
+        z-index: -1;
+        display: none;
+        text-decoration: none;
+        color: hsl(0, 0%, 100%);
+        font-size: 1em;
+        width: 3em;
+        height: 3em;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 3;
+        background-color: hsla(0,0%,0%,.1);
+        transition: transform .3s ease, background .2s ease;
+      }
+      
+      .circular-menu .menu-item:hover {
+        background-color: hsla(0,0%,0%,.3);
+      }
+      
+      .circular-menu.active .menu-item {
+        transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+      
+      .circular-menu .menu-item:nth-child(1) {
+        transform: translate3d(7em, 1em, 0); /* Ajustado para desplazarse hacia la derecha */
+      }
+      
+      .circular-menu .menu-item:nth-child(2) {
+        transform: translate3d(6.3em, -3.5em, 0); /* Ajustado para desplazarse hacia la derecha */
+      }
+      
+      
+      /**
+       * The other theme for this menu
+       */
+      
+      .circular-menu.circular-menu-left {
+        right: auto; 
+        left: 1em;
+      }
+      
+      .circular-menu.circular-menu-left .floating-btn {
+        background-color: hsl(217, 89%, 61%);
+      }
+      
+      .circular-menu.circular-menu-left:after {
+        background-color: hsl(217, 89%, 61%);
+      }
+      
+      .circular-menu.circular-menu-left.active .floating-btn i {
+        transform: rotate(90deg);
+      }
+      
+      .circular-menu.circular-menu-left.active .menu-item:nth-child(1) {
+        transform: translate3d(-7em, 0, 0);
+      }
+      
+      
+      
+      .circular-menu.circular-menu-left.active .menu-item:nth-child(2) {
+        transform: translate3d(7em,0,0);
+      }
+      
+      
+      @keyframes ಠ_ಠ {
+          100% {
+              transform: rotateY(-40deg) rotateX(-43deg);
+          }
+      }
+
+      * *, *::before, *::after { 
+          animation-play-state: running !important;
+      }
+      
+      
+     
+    
+  </style>
+  <title>Texto 3D</title>
 </head>
 <body>
+  
+  <div class="stage" id="title-container">
+    <div class="layer"></div>
+    <div class="layer"></div>
+    <div class="layer"></div>
+    <div class="layer"></div>
+    <div class="layer"></div>
+    <div class="layer"></div>
+    <div class="layer"></div>
+    <div class="layer"></div>
+    <div class="layer"></div>
+    <div class="layer"></div>
+    <div class="layer"></div>
+    <div class="layer"></div>
+    <div class="layer"></div>
+    <div class="layer"></div>
+    <div class="layer"></div>
+    <div class="layer"></div>
+    <div class="layer"></div>
+    <div class="layer"></div>
+    <div class="layer"></div>
+    <div class="layer"></div>
+  </div>
+  
+  
+  
+  <!-- Menú circular -->
+  <div id="circularMenu" class="circular-menu">
+    <a class="floating-btn" onclick="toggleMenu();">
+        <i class="fa fa-plus"></i>
+    </a>
+    <menu class="items-wrapper">
+        <a href="#" class="menu-item" onclick="mostrarLogin()">Login</a>
+        <a href="#" class="menu-item" onclick="mostrarRegistro()">Registro</a>
+    </menu>
+</div>
+  
+
     <div id="particles-js"></div>
+
     <video id='video' width="720" height="560" autoplay muted></video>
 
-    <button onclick="iniciarReconocimiento()">Hablar</button>
+    <button id="botonHablar" onclick="iniciarReconocimiento()">Hablar</button>
     <div id="mensajeContainer"></div>
+
+    
+  
 
     <script>
         const video = document.getElementById('video');
+        
 
         async function startVideo() {
             try {
@@ -47,6 +554,26 @@
                 console.error(err);
             }
         }
+        let menuOpen = false;
+
+        function toggleMenu() {
+            const menuItems = document.querySelectorAll('.circular-menu .menu-item');
+
+            if (menuOpen) {
+                // Si el menú está abierto, oculta los elementos
+                menuItems.forEach(item => item.style.display = 'none');
+            } else {
+                // Si el menú está cerrado, muestra los elementos
+                menuItems.forEach(item => item.style.display = 'block');
+            }
+          
+            // Cambia el estado del menú
+            menuOpen = !menuOpen;
+          
+            // Activa/desactiva la clase 'active' para mostrar/ocultar el menú
+            document.getElementById('circularMenu').classList.toggle('active');
+        }
+
 
         Promise.all([
             faceapi.nets.ssdMobilenetv1.loadFromUri("/static/models"),
@@ -103,7 +630,7 @@
                 results.forEach((result, i) => {
                 const box = resizedDetections[i].detection.box;
                 const drawBox = new faceapi.draw.DrawBox(box, {
-                    label: result,
+                    label: result.toString(),
                 });
                 drawBox.draw(canvas);
                             // Dibujar landmarks
@@ -114,10 +641,72 @@
                 });
             }, 100);
         });        
+        function iniciarReconocimiento() {
+          if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+              var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+              recognition.lang = 'es-ES';
+              recognition.onresult = function (event) {
+                  var transcript = event.results[0][0].transcript;
+                  if (transcript.toLowerCase().includes('a qué piso quieres ir')) {
+                      hacerPregunta('¿A qué piso quieres ir?');
+                  } else if (transcript.toLowerCase().includes('al piso')) {
+                      var numeroPiso = obtenerNumeroPiso(transcript);
+                      if (numeroPiso !== null && numeroPiso >= 0 && numeroPiso <= 9) {
+                          var mensaje = 'Yendo al piso ' + numeroPiso;
+                          mostrarMensaje(mensaje);
+                          setTimeout(function () {
+                              reproducirVoz(mensaje);
+                          }, 1000); // Aumenta o disminuye este valor según sea necesario
+                      } else {
+                          var mensajeError = 'Número de piso no válido';
+                          mostrarMensaje(mensajeError);
+                          setTimeout(function () {
+                              reproducirVoz(mensajeError);
+                          }, 1000); // Aumenta o disminuye este valor según sea necesario
+                      }
+                  }
+              };
+              recognition.start();
+          } else {
+              alert('El reconocimiento de voz no es compatible con este navegador.');
+          }
+      }
 
-    </script>
-    <script src="/static/particles.min.js"></script>
-    <script>src="/static/app.js"</script>
+      function hacerPregunta(pregunta) {
+          var mensajeContainer = document.getElementById('mensajeContainer');
+          mensajeContainer.innerText = pregunta;
+          setTimeout(function () {
+              reproducirVoz(pregunta);
+          }, 1000); // Aumenta o disminuye este valor según sea necesario
+      }
+
+      function mostrarMensaje(mensaje) {
+          var mensajeContainer = document.getElementById('mensajeContainer');
+          mensajeContainer.innerText = 'Texto reconocido: ' + mensaje;
+      }
+
+      function reproducirVoz(texto) {
+          var mensajeVoz = new SpeechSynthesisUtterance(texto);
+          window.speechSynthesis.speak(mensajeVoz);
+      }
+
+      function obtenerNumeroPiso(texto) {
+          var palabras = texto.split(' ');
+          for (var i = 0; i < palabras.length; i++) {
+              if (!isNaN(palabras[i])) {
+                  return parseInt(palabras[i]);
+              }
+          }
+          return null;
+      }
+
+      // Hacer la pregunta automáticamente después de cargar la página
+      window.onload = function () {
+          hacerPregunta('¿A qué piso quieres ir?');
+        };
+  </script>
+  
     
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 </body>
 </html>
