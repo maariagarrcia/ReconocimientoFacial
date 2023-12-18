@@ -521,13 +521,13 @@
   
   
   <!-- Menú circular -->
-  <div id="circularMenu" class="circular-menu">
+   <div id="circularMenu" class="circular-menu">
     <a class="floating-btn" onclick="toggleMenu();">
         <i class="fa fa-plus"></i>
     </a>
     <menu class="items-wrapper">
-        <a href="#" class="menu-item" onclick="mostrarLogin()">Login</a>
-        <a href="#" class="menu-item" onclick="mostrarRegistro()">Registro</a>
+        <a href="/login/i" class="menu-item" onclick="mostrarLogin()">Login</a>
+        <a href="" class="menu-item" onclick="mostrarRegistro()">Registro</a>
     </menu>
 </div>
   
@@ -592,7 +592,7 @@
                 labels.map(async (label) => {
                 const descriptions = [];
                 for (let i = 1; i <= 2; i++) {
-                    const img = await faceapi.fetchImage(`/static/profiles/${label}/${i}.jpg`);
+                    const img = await faceapi.fetchImage(`/media/profiles/${label}/${i}.jpg`);
                     const detections = await faceapi
                     .detectSingleFace(img)
                     .withFaceLandmarks()

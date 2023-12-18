@@ -23,8 +23,7 @@ from registro import views as registro_views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("",app_views.index,name="index"),
-    path("registro/",registro_views.registro,name="registro"),
+    path("",registro_views.registro,name="registro"),
     path('login/', include('login.urls')),
 
 ]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
