@@ -3,3 +3,5 @@ opencv-python-headless
 django
 speech_recognition
 pyttsx3
+face-recognition
+
